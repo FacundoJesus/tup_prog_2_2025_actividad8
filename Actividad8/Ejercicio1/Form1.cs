@@ -25,7 +25,7 @@ namespace Ejercicio1
             string path = "vehiculos.csv";
 
             string[] lineas = File.ReadAllLines(path);
-
+            
             foreach (string linea in lineas)
             {
                 string[] s = linea.Split(';');
@@ -48,7 +48,7 @@ namespace Ejercicio1
 
                     sr = new StreamReader(fs); //Flujo binario
 
-                    sr.ReadLine(); //Salta la linea 1 (patente;importe)
+                    sr.ReadLine(); //Saltea la linea 1 (patente;importe)
 
                     while (!sr.EndOfStream)
                     {
@@ -56,9 +56,17 @@ namespace Ejercicio1
 
                         Vehiculo nuevoVehiculo = new Vehiculo();
                         nuevoVehiculo.Importar(cadena);
-
-                        listaVehiculos.Add(nuevoVehiculo);
-
+                        listaVehiculos.Sort();
+                        int idx = listaVehiculos.BinarySearch(nuevoVehiculo);
+                        if (idx > -1)
+                        {
+                            listaVehiculos[idx].Importe = nuevoVehiculo.Importe;
+                        }
+                        else
+                        {
+                            listaVehiculos.Add(nuevoVehiculo);
+                        }
+                            
                     }
 
                     foreach (Vehiculo v in listaVehiculos)
@@ -87,7 +95,7 @@ namespace Ejercicio1
 
         private void btnExportar_Click(object sender, EventArgs e)
         {
-            SaveFileDialog sfd = new SaveFileDialog();
+            SaveFileDialog sfd = new SaveFileDialog(); //Ventana q abre para descargar/guardar
             sfd.Filter = "Archivos CSV|*.csv|Todos los archivos|*.*";
 
             if(sfd.ShowDialog() == DialogResult.OK)
@@ -100,12 +108,13 @@ namespace Ejercicio1
                 {
                     fs = new FileStream(nombre, FileMode.OpenOrCreate, FileAccess.Write); //Si esto ocurre.. abro el archivo
                     sw = new StreamWriter(fs); // Creamos adaptador para leer 
-                    
+
+                    sw.WriteLine("patente;importe");
                     foreach (Vehiculo v in listaVehiculos)
                     {
                         string cadena = v.Exportar();
                         sw.WriteLine(cadena);
-                    }
+                    } 
                 }
                 catch (Exception ex)
                 {
