@@ -49,13 +49,14 @@ namespace Ejercicio1
                     sr = new StreamReader(fs); //Flujo binario
 
                     sr.ReadLine(); //Saltea la linea 1 (patente;importe)
-
+                    
                     while (!sr.EndOfStream)
                     {
                         string cadena = sr.ReadLine();
 
                         Vehiculo nuevoVehiculo = new Vehiculo();
                         nuevoVehiculo.Importar(cadena);
+
                         listaVehiculos.Sort();
                         int idx = listaVehiculos.BinarySearch(nuevoVehiculo);
                         if (idx > -1)
@@ -66,13 +67,14 @@ namespace Ejercicio1
                         {
                             listaVehiculos.Add(nuevoVehiculo);
                         }
-                            
+
                     }
 
                     foreach (Vehiculo v in listaVehiculos)
                     {
                         tbResultado.Text += v.ToString();
                     }
+                    
 
                 }
                 catch (PatenteException p)
@@ -107,7 +109,7 @@ namespace Ejercicio1
                 try
                 {
                     fs = new FileStream(nombre, FileMode.OpenOrCreate, FileAccess.Write); //Si esto ocurre.. abro el archivo
-                    sw = new StreamWriter(fs); // Creamos adaptador para leer 
+                    sw = new StreamWriter(fs); // Creamos adaptador para escribir 
 
                     sw.WriteLine("patente;importe");
                     foreach (Vehiculo v in listaVehiculos)
